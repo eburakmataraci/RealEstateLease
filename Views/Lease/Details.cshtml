@@ -1,0 +1,145 @@
+@using RealEstateLease.Models
+@model Lease
+
+@{
+    ViewData["Title"] = "Sözleşme Detayı";
+    var files = ViewBag.LeaseFiles as List<string> ?? new List<string>();
+}
+
+<h2 class="mb-3">Sözleşme Detayı</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+}
+@if (TempData["Info"] != null)
+{
+    <div class="alert alert-info">
+        @TempData["Info"]
+    </div>
+}
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h4 class="card-title">
+            @Model.Unit.Property.Name - @Model.Unit.UnitNumber
+        </h4>
+
+        <dl class="row mt-3">
+            <dt class="col-sm-3">Kiracı Kullanıcı</dt>
+            <dd class="col-sm-9">@Model.Tenant.Email</dd>
+
+            <dt class="col-sm-3">Başlangıç Tarihi</dt>
+            <dd class="col-sm-9">@Model.StartDate.ToShortDateString()</dd>
+
+            <dt class="col-sm-3">Bitiş Tarihi</dt>
+            <dd class="col-sm-9">@Model.EndDate.ToShortDateString()</dd>
+
+            <dt class="col-sm-3">Aylık Kira</dt>
+            <dd class="col-sm-9">@Model.MonthlyRent.ToString("N0") ₺</dd>
+
+            <dt class="col-sm-3">Durum</dt>
+            <dd class="col-sm-9">@Model.Status</dd>
+        </dl>
+    </div>
+</div>
+
+<h4>Ödeme Planı</h4>
+
+@if (Model.Invoices != null && Model.Invoices.Any())
+{
+    <table class="table table-sm table-striped">
+        <thead class="table-light">
+            <tr>
+                <th>Vade Tarihi</th>
+                <th>Tutar</th>
+                <th>Ödenen</th>
+                <th>Durum</th>
+                <th>İşlem</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var inv in Model.Invoices.OrderBy(i => i.DueDate))
+        {
+            <tr>
+                <td>@inv.DueDate.ToShortDateString()</td>
+                <td>@inv.Amount.ToString("N0") ₺</td>
+                <td>@inv.AmountPaid.ToString("N0") ₺</td>
+                <td>@inv.Status</td>
+                <td>
+                    @if (inv.Status == InvoiceStatus.Unpaid)
+                    {
+                        <a class="btn btn-sm btn-success"
+                           asp-controller="Payment"
+                           asp-action="Pay"
+                           asp-route-id="@inv.Id">
+                            Öde
+                        </a>
+                    }
+                    else
+                    {
+                        <span class="text-muted">Ödendi</span>
+                    }
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-info">
+        Bu sözleşme için oluşturulmuş bir fatura/ödeme kaydı bulunmuyor.
+    </div>
+}
+
+<hr />
+
+<h4>Belgeler</h4>
+
+@if (files.Any())
+{
+    <ul>
+        @foreach (var f in files)
+        {
+            <li>
+                <a href="~/uploads/leases/@f" target="_blank">@f</a>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p class="text-muted">Bu sözleşme için henüz yüklenmiş bir belge yok.</p>
+}
+
+<h5 class="mt-3">Belge Yükle</h5>
+
+<form asp-action="UploadDocument" method="post" enctype="multipart/form-data" class="mb-3">
+    <input type="hidden" name="id" value="@Model.Id" />
+    <div class="row g-2 align-items-center">
+        <div class="col-md-6">
+            <input type="file" name="file" class="form-control" />
+        </div>
+        <div class="col-md-3 mt-2 mt-md-0">
+            <button type="submit" class="btn btn-outline-primary w-100">
+                Belge Yükle
+            </button>
+        </div>
+    </div>
+</form>
+
+@if (Model.Status == LeaseStatus.PendingSignature)
+{
+    <hr />
+    <form asp-action="Sign" method="post">
+        <input type="hidden" name="id" value="@Model.Id" />
+        <button type="submit" class="btn btn-success">
+            Sözleşmeyi İmzala
+        </button>
+    </form>
+}
+
+<a asp-action="MyLeases" class="btn btn-secondary mt-3">Geri Dön</a>

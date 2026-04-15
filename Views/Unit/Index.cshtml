@@ -1,0 +1,52 @@
+@model IEnumerable<RealEstateLease.Models.Unit>
+
+@{
+    ViewData["Title"] = "Daireler";
+    var property = ViewBag.Property as RealEstateLease.Models.Property;
+}
+
+<h2>@property?.Name - Daireler</h2>
+
+<table class="table table-hover table-dark mt-3">
+    <thead>
+        <tr>
+            <th>Foto</th>
+            <th>Daire</th>
+            <th>Kat</th>
+            <th>Kira</th>
+            <th>Durum</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td style="width:120px">
+                @if (!string.IsNullOrEmpty(item.PhotoFileName))
+                {
+                    <img src="~/images/units/@item.PhotoFileName"
+                         alt="Daire fotoğrafı"
+                         style="width:110px;height:70px;object-fit:cover;border-radius:10px;" />
+                }
+                else
+                {
+                    <span class="text-muted small">Fotoğraf yok</span>
+                }
+            </td>
+            <td>@item.UnitNumber</td>
+            <td>@item.Floor</td>
+            <td>@item.MonthlyRent.ToString("C0")</td>
+            <td>@(item.IsOccupied ? "Dolu" : "Boş")</td>
+            <td>
+                <a class="btn btn-sm btn-outline-light"
+                   asp-controller="Lease"
+                   asp-action="Create"
+                   asp-route-unitId="@item.Id">
+                    Sözleşme Oluştur
+                </a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

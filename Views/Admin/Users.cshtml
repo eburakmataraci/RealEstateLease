@@ -1,0 +1,70 @@
+@using RealEstateLease.Models
+@model List<AdminUserVm>
+
+@{
+    ViewData["Title"] = "Kullanıcı Yönetimi";
+}
+
+<h2 class="mb-3">Kullanıcı Yönetimi</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+}
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-info">
+        Sistemde kayıtlı kullanıcı yok.
+    </div>
+}
+else
+{
+    <table class="table table-striped table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th>E-posta</th>
+                <th>Kullanıcı Adı</th>
+                <th>Roller</th>
+                <th>Rol Ata</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var u in Model)
+        {
+            <tr>
+                <td>@u.Email</td>
+                <td>@u.UserName</td>
+                <td>@(string.IsNullOrWhiteSpace(u.Roles) ? "-" : u.Roles)</td>
+                <td>
+                    <form asp-action="SetRole" method="post" class="d-inline">
+                        <input type="hidden" name="userId" value="@u.Id" />
+                        <input type="hidden" name="role" value="@AppRoles.Admin" />
+                        <button type="submit" class="btn btn-sm btn-danger">
+                            Admin
+                        </button>
+                    </form>
+
+                    <form asp-action="SetRole" method="post" class="d-inline ms-1">
+                        <input type="hidden" name="userId" value="@u.Id" />
+                        <input type="hidden" name="role" value="@AppRoles.Owner" />
+                        <button type="submit" class="btn btn-sm btn-primary">
+                            Mülk Sahibi
+                        </button>
+                    </form>
+
+                    <form asp-action="SetRole" method="post" class="d-inline ms-1">
+                        <input type="hidden" name="userId" value="@u.Id" />
+                        <input type="hidden" name="role" value="@AppRoles.Tenant" />
+                        <button type="submit" class="btn btn-sm btn-secondary">
+                            Kiracı
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

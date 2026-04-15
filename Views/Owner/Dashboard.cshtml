@@ -1,0 +1,125 @@
+@using RealEstateLease.Models
+@model OwnerDashboardViewModel
+
+@{
+    ViewData["Title"] = "Mülk Sahibi Paneli";
+
+    var labelsJson = System.Text.Json.JsonSerializer.Serialize(
+        ViewBag.ChartLabels ?? Array.Empty<string>()
+    );
+    var dataJson = System.Text.Json.JsonSerializer.Serialize(
+        ViewBag.ChartData ?? Array.Empty<decimal>()
+    );
+}
+
+<h2 class="mb-4">Mülk Sahibi Paneli</h2>
+
+<div class="row mb-4">
+    <div class="col-md-6 mb-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h5 class="card-title">Toplam Aylık Kira (Aktif Sözleşmeler)</h5>
+                <p class="display-6 text-primary">
+                    @Model.GrandMonthlyRentTotal.ToString("N0") ₺
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h5 class="card-title">Bekleyen Tahsilatlar</h5>
+                <p class="display-6 text-danger">
+                    @Model.GrandUnpaidTotal.ToString("N0") ₺
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow-sm border-0" style="min-height: 260px;">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Son 6 Ay Tahsilat Grafiği</h5>
+                <canvas id="incomeChart" height="120"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h4 class="mt-4 mb-2">Mülk Bazlı Özet</h4>
+
+@if (Model.Properties == null || !Model.Properties.Any())
+{
+    <div class="alert alert-info">
+        Henüz sistemde kayıtlı mülk bulunmuyor.
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Mülk</th>
+                    <th>Toplam Daire</th>
+                    <th>Dolu Daire</th>
+                    <th>Aktif Sözleşme</th>
+                    <th>Aylık Kira Toplamı</th>
+                    <th>Bekleyen Tahsilat</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var p in Model.Properties)
+            {
+                <tr>
+                    <td>@p.PropertyName</td>
+                    <td>@p.UnitCount</td>
+                    <td>@p.OccupiedUnitCount</td>
+                    <td>@p.ActiveLeaseCount</td>
+                    <td>@p.MonthlyRentTotal.ToString("N0") ₺</td>
+                    <td>@p.UnpaidTotal.ToString("N0") ₺</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        (function () {
+            var labels = @Html.Raw(labelsJson);
+            var data = @Html.Raw(dataJson);
+
+            if (!labels || labels.length === 0) {
+                return;
+            }
+
+            var ctx = document.getElementById('incomeChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Tahsil Edilen Tutar (₺)',
+                        data: data,
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        })();
+    </script>
+}

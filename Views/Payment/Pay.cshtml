@@ -1,0 +1,45 @@
+@using RealEstateLease.Models
+@model RentInvoice
+
+@{
+    ViewData["Title"] = "Fatura Ödeme";
+}
+
+<h2 class="mb-3">Fatura Ödeme</h2>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title">
+            @Model.Lease?.Unit?.Property?.Name - @Model.Lease?.Unit?.UnitNumber
+        </h5>
+
+        <dl class="row mt-3">
+            <dt class="col-sm-3">Vade Tarihi</dt>
+            <dd class="col-sm-9">@Model.DueDate.ToShortDateString()</dd>
+
+            <dt class="col-sm-3">Tutar</dt>
+            <dd class="col-sm-9">@Model.Amount.ToString("N0") ₺</dd>
+
+            <dt class="col-sm-3">Durum</dt>
+            <dd class="col-sm-9">@Model.Status</dd>
+        </dl>
+
+        <p class="text-muted">
+            Bu ekranda gerçek bir ödeme altyapısı yok.  
+            Butona bastığınızda ödeme başarılı kabul edilecek.
+        </p>
+
+        <form asp-action="PayConfirmed" method="post">
+            <input type="hidden" name="id" value="@Model.Id" />
+            <button type="submit" class="btn btn-success">
+                Ödemeyi Onayla
+            </button>
+            <a asp-controller="Lease"
+               asp-action="Details"
+               asp-route-id="@Model.LeaseId"
+               class="btn btn-secondary ms-2">
+                İptal
+            </a>
+        </form>
+    </div>
+</div>

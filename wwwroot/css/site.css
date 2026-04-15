@@ -1,0 +1,433 @@
+/* ===========================
+   GENEL TEMA / DEĞİŞKENLER
+   (Açık + pastel tema)
+   =========================== */
+:root {
+    --color-bg: #f3f4f6;
+    --color-bg-soft: #e5e7eb;
+    --color-card: #ffffff;
+    --color-primary: #2563eb;          /* mavi */
+    --color-primary-soft: rgba(37, 99, 235, 0.08);
+    --color-primary-strong: #1d4ed8;
+    --color-accent: #10b981;           /* yeşil */
+    --color-accent-soft: rgba(16, 185, 129, 0.08);
+    --color-border: rgba(148, 163, 184, 0.6);
+    --color-text: #111827;
+    --color-text-soft: #6b7280;
+    --color-danger: #ef4444;
+    --radius-lg: 18px;
+    --radius-md: 12px;
+    --radius-pill: 999px;
+    --shadow-soft: 0 18px 45px rgba(148, 163, 184, 0.45);
+    --shadow-chip: 0 10px 28px rgba(148, 163, 184, 0.5);
+    --transition-fast: 0.18s ease-out;
+    --transition-normal: 0.25s ease;
+}
+
+/* Arka plan & font */
+.app-body {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at top left, #c7d2fe 0, transparent 45%),
+        radial-gradient(circle at top right, #bbf7d0 0, transparent 45%),
+        linear-gradient(to bottom, #f9fafb, #e5e7eb);
+    color: var(--color-text);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* ===========================
+   NAVBAR
+   =========================== */
+
+.main-navbar {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.navbar-brand {
+    color: #111827 !important;
+    font-weight: 700;
+    letter-spacing: .02em;
+    font-size: 1.1rem;
+}
+
+.brand-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 14px;
+    background: radial-gradient(circle at 20% 0, #60a5fa 0, #2563eb 45%, #10b981 100%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-chip);
+    color: white;
+    font-size: 1rem;
+}
+
+.brand-text {
+    white-space: nowrap;
+}
+
+.main-menu .nav-link {
+    position: relative;
+    color: var(--color-text-soft) !important;
+    font-weight: 500;
+    padding: 0.6rem 0.9rem;
+    border-radius: var(--radius-pill);
+    margin-right: 0.25rem;
+    transition:
+        background var(--transition-fast),
+        color var(--transition-fast),
+        transform var(--transition-fast);
+}
+
+.main-menu .nav-link:hover {
+    background: rgba(148, 163, 184, 0.18);
+    color: var(--color-text) !important;
+    transform: translateY(-1px);
+}
+
+.main-menu .dropdown-menu {
+    background: #ffffff;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    padding: 0.4rem;
+    min-width: 210px;
+}
+
+.main-menu .dropdown-item {
+    color: var(--color-text-soft);
+    border-radius: var(--radius-pill);
+    padding: 0.45rem 0.9rem;
+    font-size: 0.9rem;
+    transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.main-menu .dropdown-item:hover {
+    background: var(--color-primary-soft);
+    color: var(--color-text);
+}
+
+/* ===========================
+   ANA KART / CONTENT SHELL
+   =========================== */
+
+.app-main {
+    padding-bottom: 3rem;
+}
+
+.app-card {
+    background: radial-gradient(circle at 0 0, rgba(59, 130, 246, 0.06) 0, rgba(16, 185, 129, 0.04) 40%, #ffffff 90%);
+    border-radius: 26px;
+    border: 1px solid rgba(148, 163, 184, 0.4);
+    box-shadow: var(--shadow-soft);
+    padding: 1.75rem 2.25rem;
+    margin-top: 1.75rem;
+}
+
+@media (max-width: 768px) {
+    .app-card {
+        padding: 1.2rem 1.1rem;
+        border-radius: 18px;
+    }
+}
+
+/* İçerik başlıkları */
+.app-content h1,
+.app-content h2,
+.app-content h3 {
+    color: #111827;
+    font-weight: 700;
+}
+
+.app-content h2 {
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.app-content h2::after {
+    content: "";
+    flex: 1;
+    margin-left: .75rem;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(148, 163, 184, 0.8), transparent);
+}
+
+/* ===========================
+   BUTONLAR
+   =========================== */
+
+.btn {
+    border-radius: 999px !important;
+    font-weight: 500;
+    border-width: 1px;
+    letter-spacing: 0.02em;
+}
+
+.btn-primary,
+.btn-success,
+.btn-danger,
+.btn-info,
+.btn-secondary {
+    border: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    box-shadow: 0 10px 30px rgba(37, 99, 235, 0.35);
+    color: #f9fafb;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    transform: translateY(-1px);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    box-shadow: 0 10px 26px rgba(22, 163, 74, 0.35);
+    color: #f9fafb;
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #16a34a, #15803d);
+}
+
+.btn-outline-light {
+    border-color: rgba(148, 163, 184, 0.8);
+    color: var(--color-text-soft);
+}
+
+.btn-outline-light:hover {
+    background: rgba(148, 163, 184, 0.18);
+    color: var(--color-text);
+}
+
+/* ===========================
+   TABLE / CARD / BADGE
+   =========================== */
+
+.table {
+    color: var(--color-text-soft);
+    margin-bottom: 0;
+    background-color: transparent;
+}
+
+.table thead {
+    background: #e5e7eb;
+    color: #111827;
+}
+
+.table thead th {
+    border-bottom: 0;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.table tbody tr {
+    background-color: #f9fafb;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #eef2ff;
+}
+
+.table tbody tr:hover {
+    background: #dbeafe;
+    transition: background 0.15s ease-out;
+}
+
+.table td,
+.table th {
+    border-color: rgba(209, 213, 219, 0.9) !important;
+}
+
+/* Bootstrap rozetleri */
+.badge {
+    border-radius: 999px;
+    padding: 0.4rem 0.65rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.badge.bg-success {
+    background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+}
+
+.badge.bg-warning {
+    background: linear-gradient(135deg, #facc15, #f59e0b) !important;
+    color: #78350f;
+}
+
+/* ===========================
+   ALERT KUTULARI
+   =========================== */
+
+.alert {
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(148, 163, 184, 0.5);
+    background: #f9fafb;
+    color: var(--color-text-soft);
+}
+
+.alert-success {
+    border-color: rgba(34, 197, 94, 0.7);
+    background: var(--color-accent-soft);
+    color: #166534;
+}
+
+.alert-info {
+    border-color: rgba(59, 130, 246, 0.7);
+    background: var(--color-primary-soft);
+    color: #1d4ed8;
+}
+
+.alert-danger {
+    border-color: rgba(239, 68, 68, 0.8);
+    background: rgba(254, 226, 226, 0.9);
+    color: #b91c1c;
+}
+
+/* ===========================
+   FORM KONTROLLERİ
+   =========================== */
+
+.form-control,
+.form-select {
+    background: #f9fafb;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(148, 163, 184, 0.8);
+    color: var(--color-text);
+    font-size: 0.95rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.6);
+    background: #ffffff;
+    color: var(--color-text);
+}
+
+.form-label {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-soft);
+}
+
+/* ===========================
+   FOOTER
+   =========================== */
+
+.app-footer {
+    border-top: 1px solid rgba(148, 163, 184, 0.6);
+    padding: 1rem 0 1.4rem;
+    background: linear-gradient(to right, #e5e7eb, #f9fafb);
+}
+
+.app-footer a {
+    color: #2563eb;
+    text-decoration: none;
+}
+
+.app-footer a:hover {
+    text-decoration: underline;
+}
+
+/* ===========================
+   KÜÇÜK YARDIMCI CLASSLAR
+   =========================== */
+
+.page-subtitle {
+    font-size: 0.9rem;
+    color: var(--color-text-soft);
+    margin-top: 0.2rem;
+    margin-bottom: 1.2rem;
+}
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.15rem 0.75rem;
+    border-radius: 999px;
+    border: 1px solid rgba(148, 163, 184, 0.8);
+    background: #f9fafb;
+    font-size: 0.75rem;
+    color: var(--color-text-soft);
+}
+
+/* ===========================
+   DAİRE FOTOĞRAFLARI
+   =========================== */
+
+.unit-thumb {
+    width: 90px;
+    height: 70px;
+    border-radius: 14px;
+    object-fit: cover;
+    border: 1px solid rgba(148, 163, 184, 0.45);
+    background: rgba(15, 23, 42, 0.6);
+}
+
+.unit-thumb.placeholder {
+    font-size: 0.7rem;
+}
+
+/* ===========================
+   AUTH FORM (LOGIN / REGISTER)
+   =========================== */
+
+.form-container {
+    max-width: 420px;
+    margin: 2.5rem auto;
+    padding: 1.75rem 1.5rem;
+    border-radius: 18px;
+    background: var(--color-card, #ffffff);
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.16);
+    border: 1px solid rgba(148, 163, 184, 0.4);
+}
+
+.form-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+    color: var(--color-text, #111827);
+}
+
+.form-subtitle {
+    font-size: 0.9rem;
+    color: var(--color-text-soft, #6b7280);
+    margin-bottom: 1.2rem;
+}
+
+/* Küçük ekran için */
+@media (max-width: 576px) {
+    .form-container {
+        margin: 1.25rem 0.75rem;
+        padding: 1.25rem 1rem;
+        border-radius: 16px;
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.14);
+    }
+
+    .form-title {
+        font-size: 1.4rem;
+    }
+
+    .form-subtitle {
+        font-size: 0.85rem;
+    }
+
+    .form-container .form-control,
+    .form-container .btn {
+        font-size: 0.95rem;
+        padding: 0.55rem 0.75rem;
+    }
+}

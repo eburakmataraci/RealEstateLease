@@ -1,0 +1,61 @@
+@model RealEstateLease.Models.Unit
+
+@{
+    ViewData["Title"] = "Yeni Daire";
+}
+
+<div class="app-card">
+    <h2>Daire Ekle</h2>
+    <p class="page-subtitle">
+        Seçili mülke yeni bir daire ekleyin ve isteğe bağlı olarak fotoğraf yükleyin.
+    </p>
+
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="PropertyId" />
+
+        <div class="row">
+            <div class="col-md-6">
+
+                <div class="mb-3">
+                    <label asp-for="UnitNumber" class="form-label">Daire No</label>
+                    <input asp-for="UnitNumber" class="form-control" />
+                    <span asp-validation-for="UnitNumber" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Floor" class="form-label">Kat</label>
+                    <input asp-for="Floor" class="form-control" />
+                    <span asp-validation-for="Floor" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="MonthlyRent" class="form-label">Aylık Kira (₺)</label>
+                    <input asp-for="MonthlyRent" class="form-control" />
+                    <span asp-validation-for="MonthlyRent" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3 form-check">
+                    <input asp-for="IsOccupied" class="form-check-input" />
+                    <label asp-for="IsOccupied" class="form-check-label">Dolu mu?</label>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Daire Fotoğrafı</label>
+                    <input type="file" name="photo" class="form-control" accept="image/*" />
+                    <div class="form-text">
+                        İsteğe bağlı. JPG/PNG, maksimum 5-10 MB civarı önerilir.
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary me-2">Kaydet</button>
+                <a asp-action="Index" asp-route-propertyId="@Model.PropertyId" class="btn btn-outline-light">
+                    İptal
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

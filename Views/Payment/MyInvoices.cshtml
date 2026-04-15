@@ -1,0 +1,85 @@
+@using RealEstateLease.Models
+@model List<RentInvoice>
+
+@{
+    ViewData["Title"] = "Ödemelerim";
+}
+
+<h2 class="mb-3">Ödemelerim</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+}
+@if (TempData["Info"] != null)
+{
+    <div class="alert alert-info">
+        @TempData["Info"]
+    </div>
+}
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-info">
+        Henüz size ait bir fatura bulunmuyor.
+    </div>
+}
+else
+{
+    <table class="table table-striped table-bordered table-hover">
+        <thead class="table-light">
+            <tr>
+                <th>Mülk</th>
+                <th>Daire</th>
+                <th>Vade Tarihi</th>
+                <th>Tutar</th>
+                <th>Ödenen</th>
+                <th>Durum</th>
+                <th>İşlem</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var inv in Model.OrderBy(i => i.DueDate))
+        {
+            <tr>
+                <td>@inv.Lease?.Unit?.Property?.Name</td>
+                <td>@inv.Lease?.Unit?.UnitNumber</td>
+                <td>@inv.DueDate.ToShortDateString()</td>
+                <td>@inv.Amount.ToString("N0") ₺</td>
+                <td>@inv.AmountPaid.ToString("N0") ₺</td>
+                <td>
+                    @if (inv.Status == InvoiceStatus.Unpaid)
+                    {
+                        <span class="badge-status badge-status-unpaid">Ödenmemiş</span>
+                    }
+                    else if (inv.Status == InvoiceStatus.Paid)
+                    {
+                        <span class="badge-status badge-status-paid">Ödendi</span>
+                    }
+                    else
+                    {
+                        <span class="badge-status">@inv.Status</span>
+                    }
+                </td>
+                <td>
+                    @if (inv.Status == InvoiceStatus.Unpaid)
+                    {
+                        <a class="btn btn-sm btn-success"
+                           asp-controller="Payment"
+                           asp-action="Pay"
+                           asp-route-id="@inv.Id">
+                            Öde
+                        </a>
+                    }
+                    else
+                    {
+                        <span class="text-muted">İşlem yok</span>
+                    }
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

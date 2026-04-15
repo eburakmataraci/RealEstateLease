@@ -1,0 +1,96 @@
+@using RealEstateLease.Models
+@model IEnumerable<RealEstateLease.Models.MaintenanceRequest>
+
+@{
+    ViewData["Title"] = "Bakım Talepleri (Sahip)";
+}
+
+<h2 class="mb-3">Bakım Talepleri (Sahip)</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+}
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-info">
+        Şu anda kayıtlı bakım talebi bulunmuyor.
+    </div>
+}
+else
+{
+    <table class="table table-striped table-bordered align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Mülk</th>
+                <th>Daire</th>
+                <th>Kiracı</th>
+                <th>Başlık</th>
+                <th>Durum</th>
+                <th>Oluşturulma</th>
+                <th>Kiracı Notu</th>
+                <th>Ev Sahibi Notu / Güncelle</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var m in Model)
+        {
+            <tr>
+                <td>@m.Unit.Property.Name</td>
+                <td>@m.Unit.UnitNumber</td>
+                <td>@m.Tenant.Email</td>
+                <td>@m.Title</td>
+                <td>
+                    @switch (m.Status)
+                    {
+                        case MaintenanceStatus.New:
+                            @:<span class="badge bg-warning text-dark">Yeni</span>
+                            break;
+                        case MaintenanceStatus.InProgress:
+                            @:<span class="badge bg-info text-dark">Devam Ediyor</span>
+                            break;
+                        case MaintenanceStatus.Completed:
+                            @:<span class="badge bg-success">Tamamlandı</span>
+                            break;
+                        case MaintenanceStatus.Cancelled:
+                            @:<span class="badge bg-secondary">İptal</span>
+                            break;
+                    }
+                </td>
+                <td>@m.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+                <td>@m.TenantNote</td>
+                <td style="min-width: 260px;">
+                    <form asp-action="UpdateStatus" method="post" class="row g-1">
+                        <input type="hidden" name="id" value="@m.Id" />
+
+                        <div class="col-12 mb-1">
+                            <select name="status" class="form-select form-select-sm">
+                                <option value="@((int)MaintenanceStatus.New)">Yeni</option>
+                                <option value="@((int)MaintenanceStatus.InProgress)">Devam Ediyor</option>
+                                <option value="@((int)MaintenanceStatus.Completed)">Tamamlandı</option>
+                                <option value="@((int)MaintenanceStatus.Cancelled)">İptal</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12 mb-1">
+                            <textarea name="ownerNote"
+                                      class="form-control form-control-sm"
+                                      rows="2"
+                                      placeholder="Ev sahibi notu...">@m.OwnerNote</textarea>
+                        </div>
+
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-sm btn-primary w-100">
+                                Kaydet
+                            </button>
+                        </div>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

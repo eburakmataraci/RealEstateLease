@@ -1,0 +1,71 @@
+﻿@model RealEstateLease.Models.MaintenanceCreateVm
+
+@{
+    ViewData["Title"] = "Yeni Bakım Talebi";
+}
+
+<div class="app-card">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h2>Yeni Bakım Talebi</h2>
+            <p class="page-subtitle">
+                Sözleşmenizle ilgili bir arıza / bakım isteği oluşturun.
+            </p>
+        </div>
+        <a asp-action="MyRequests" class="btn btn-outline-light">
+            Talep Listeme Dön
+        </a>
+    </div>
+
+    <form asp-action="Create" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <!-- Sözleşme / daire seçimi -->
+        <div class="mb-3">
+            <label asp-for="LeaseId" class="form-label"></label>
+            <select asp-for="LeaseId" class="form-select">
+                <option value="">Sözleşme / daire seçin...</option>
+                @if (Model.Leases != null)
+                {
+                    foreach (var lease in Model.Leases)
+                    {
+                        <option value="@lease.Id">
+                            @lease.Unit?.Property?.Name - @lease.Unit?.UnitNumber
+                        </option>
+                    }
+                }
+            </select>
+            <span asp-validation-for="LeaseId" class="text-danger"></span>
+        </div>
+
+        <!-- Başlık -->
+        <div class="mb-3">
+            <label asp-for="Title" class="form-label"></label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+
+        <!-- Açıklama -->
+        <div class="mb-3">
+            <label asp-for="Description" class="form-label"></label>
+            <textarea asp-for="Description" rows="4" class="form-control"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <!-- Ek Not -->
+        <div class="mb-3">
+            <label asp-for="TenantNote" class="form-label"></label>
+            <textarea asp-for="TenantNote" rows="3" class="form-control"></textarea>
+            <span asp-validation-for="TenantNote" class="text-danger"></span>
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Talebi Gönder</button>
+            <a asp-action="MyRequests" class="btn btn-outline-light">İptal</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

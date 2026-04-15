@@ -1,0 +1,39 @@
+﻿@using RealEstateLease.Models
+@model RealEstateLease.Models.MaintenanceRequest
+
+@{
+    ViewData["Title"] = "Bakım Talebi Detayı";
+}
+
+<h2 class="mb-3">Bakım Talebi Detayı</h2>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <h4 class="card-title">@Model.Title</h4>
+
+        <p class="text-muted mb-1">
+            <strong>Mülk:</strong> @Model.Unit.Property.Name (@Model.Unit.UnitNumber)
+        </p>
+        <p class="text-muted mb-1">
+            <strong>Oluşturan:</strong> @Model.Tenant.Email
+        </p>
+        <p class="text-muted mb-1">
+            <strong>Tarih:</strong> @Model.CreatedAt.ToString("g")
+        </p>
+        <p class="text-muted mb-1">
+            <strong>Durum:</strong> @Model.Status
+        </p>
+
+        <hr />
+        <p>@Model.Description</p>
+
+        @if (!string.IsNullOrWhiteSpace(Model.OwnerNote))
+        {
+            <hr />
+            <h5>Ev Sahibi / Yönetici Notu</h5>
+            <p>@Model.OwnerNote</p>
+        }
+    </div>
+</div>
+
+<a asp-action="MyRequests" class="btn btn-secondary">Geri Dön</a>

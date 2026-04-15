@@ -1,0 +1,101 @@
+@using RealEstateLease.Models
+@model Lease
+
+@{
+    ViewData["Title"] = "Yeni Sözleşme";
+
+    // Controller'da: ViewBag.Properties = await _context.Properties.ToListAsync();
+    var properties = ViewBag.Properties as List<Property>;
+}
+
+<h2 class="mb-3">Yeni Sözleşme Oluştur</h2>
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <!-- Mülk seçimi -->
+    <div class="mb-3">
+        <label class="form-label">Mülk</label>
+        <select id="propertySelect" class="form-select">
+            <option value="">-- Mülk seçin --</option>
+            @if (properties != null)
+            {
+                foreach (var p in properties)
+                {
+                    <option value="@p.Id">@p.Name (@p.Address)</option>
+                }
+            }
+        </select>
+        <small class="text-muted">Önce mülkü seçin, sonra boş daireler listelenecek.</small>
+    </div>
+
+    <!-- Daire seçimi -->
+    <div class="mb-3">
+        <label asp-for="UnitId" class="form-label">Daire</label>
+        <select asp-for="UnitId" class="form-select" id="unitSelect">
+            <option value="">Önce mülk seçin</option>
+        </select>
+        <span asp-validation-for="UnitId" class="text-danger"></span>
+    </div>
+
+    <!-- Başlangıç / Bitiş -->
+    <div class="mb-3">
+        <label asp-for="StartDate" class="form-label">Başlangıç Tarihi</label>
+        <input asp-for="StartDate" type="date" class="form-control" />
+        <span asp-validation-for="StartDate" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="EndDate" class="form-label">Bitiş Tarihi</label>
+        <input asp-for="EndDate" type="date" class="form-control" />
+        <span asp-validation-for="EndDate" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Sözleşme Talebi Gönder</button>
+    <a asp-action="MyLeases" class="btn btn-secondary ms-2">İptal</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        const propertySelect = document.getElementById('propertySelect');
+        const unitSelect = document.getElementById('unitSelect');
+
+        propertySelect.addEventListener('change', function () {
+            const propertyId = this.value;
+            unitSelect.innerHTML = '<option>Yükleniyor...</option>';
+
+            if (!propertyId) {
+                unitSelect.innerHTML = '<option value="">Önce mülk seçin</option>';
+                return;
+            }
+
+            fetch('@Url.Action("GetUnits", "Lease")?propertyId=' + propertyId)
+                .then(r => r.json())
+                .then(data => {
+                    unitSelect.innerHTML = '';
+
+                    if (!data || data.length === 0) {
+                        unitSelect.innerHTML =
+                            '<option value="">Bu mülk için boş daire bulunamadı</option>';
+                        return;
+                    }
+
+                    unitSelect.insertAdjacentHTML('beforeend',
+                        '<option value="">-- Daire seçin --</option>');
+
+                    data.forEach(u => {
+                        const opt = document.createElement('option');
+                        opt.value = u.id;
+                        opt.textContent = u.unitNumber;
+                        unitSelect.appendChild(opt);
+                    });
+                })
+                .catch(() => {
+                    unitSelect.innerHTML =
+                        '<option value="">Daireler yüklenirken hata oluştu</option>';
+                });
+        });
+    </script>
+}

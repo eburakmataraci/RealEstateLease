@@ -1,0 +1,55 @@
+@using RealEstateLease.Models
+@model List<Property>
+
+@{
+    ViewData["Title"] = "Mülkler";
+}
+
+<h2 class="mb-3">Mülkler</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+}
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Yeni Mülk Ekle</a>
+</p>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-info">
+        Henüz kayıtlı bir mülk yok.
+    </div>
+}
+else
+{
+    <table class="table table-striped table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th>Ad</th>
+                <th>Adres</th>
+                <th>İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Address</td>
+                <td>
+                    <a class="btn btn-sm btn-primary"
+                       asp-controller="Unit"
+                       asp-action="Index"
+                       asp-route-propertyId="@item.Id">
+                        Daireleri Gör
+                    </a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
